@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ./
+      args:
+        VIDEO_DIRECTORY: ${VIDEO_DIRECTORY}
+    container_name: video_app
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    restart: always
+    networks:
+      global_network:
+      default:
+    volumes:
+      - videoapi-storage:/home/python/${VIDEO_DIRECTORY}
+
+  redis:
+    image: redis:alpine
+    container_name: video_redis
+    restart: always
+    networks:
+      default:
+
+networks:
+  global_network:
+    external: true
+volumes:
+  videoapi-storage:
