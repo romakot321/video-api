@@ -32,6 +32,9 @@ class VideoService:
 
         logger.debug("Sending submit request to AI: " + str(request.model_dump()))
         response = await self.ai_repository.generate(request)
+        if response is None:
+            await self.video_repository.update(str(video_id), is_invalid=1, comment="Error when request sended")
+            return
         logger.debug("Received response: " + str(response))
 
         return await self.video_repository.update(str(video_id), is_finished=0)
