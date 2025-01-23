@@ -18,7 +18,6 @@ class AIRepository:
     video_directory = os.getenv("VIDEO_DIRECTORY", 'video').rstrip('/')
 
     async def generate(self, schema: AITaskCreateRequestSchema):
-        return
         return await replicate.predictions.async_create(
             model="luma/ray",
             input={"prompt": schema.prompt},
@@ -27,7 +26,6 @@ class AIRepository:
         )
 
     async def load_video(self, api_url: str, video_id: str):
-        return
         async with aiohttp.ClientSession() as session:
             file_response = await session.get(
                 api_url,
