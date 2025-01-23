@@ -25,7 +25,8 @@ class AIRepository:
                 webhook=self.webhook_url + "/" + schema.video_id,
                 webhook_events_filter=["completed"]
             )
-        except replicate.exceptions.ReplicateError:
+        except replicate.exceptions.ReplicateError as e:
+            logger.exception(e)
             return None
 
     async def load_video(self, api_url: str, video_id: str):
