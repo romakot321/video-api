@@ -8,7 +8,7 @@ services:
         VIDEO_DIRECTORY: ${VIDEO_DIRECTORY}
     container_name: video_app
     depends_on:
-      - redis
+      - postgres
     env_file:
       - .env
     restart: always
@@ -18,10 +18,12 @@ services:
     volumes:
       - videoapi-storage:/home/python/${VIDEO_DIRECTORY}
 
-  redis:
-    image: redis:alpine
-    container_name: video_redis
+  postgres:
+    image: postgres:latest
+    container_name: video_db
     restart: always
+    env_file:
+      - .env
     networks:
       default:
 

@@ -9,6 +9,8 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from contextlib import asynccontextmanager
 
+from app.db.admin import attach_admin_panel
+
 
 class ProjectSettings(BaseSettings):
     LOCAL_MODE: bool = False
@@ -53,6 +55,8 @@ def init_web_application():
     from app.routes.video import router as video_router
 
     application.include_router(video_router)
+
+    attach_admin_panel(application)
 
     return application
 

@@ -3,35 +3,32 @@ from loguru import logger
 from uuid import uuid4
 
 from app.db.base import get_session
+from app.db.tables import Video, VideoStatus
 from app.schemas.video import VideoTaskSchema
+from app.repositories.base import BaseRepository
 
 
-class VideoRepository:
-    def __init__(self, session=Depends(get_session)):
-        self.session = session
+class VideoRepository(BaseRepository):
+    base_table = Video
 
-    def _generate_id(self) -> str:
-        return str(uuid4())
-
-    async def create(self) -> VideoTaskSchema:
-        data = {
-            "id": self._generate_id(),
-            "is_finished": 0,
-            "is_invalid": 0,
-            "video_url": ""
-        }
-        await self.session.hset(data["id"], mapping=data)
-        return VideoTaskSchema(**data)
+    async def create(self, user_id: str) -> VideoTaskSchema:
+        model = Video(user_id=user_id)
+        model = await self._create(model)
+        return VideoTaskSchema.model_validate(model)
 
     async def update(self, schema: VideoTaskSchema):
-        data = schema.model_dump()
-        data["is_finished"] = int(data["is_finished"])
-        data["is_invalid"] = int(data["is_invalid"])
-        await self.session.hset(schema.id, mapping=data)
+        data = schema.model_dump(exclude_none=True)
 
-    async def get(self, video_id: str) -> VideoTaskSchema | None:
-        data = await self.session.hgetall(video_id)
-        if not data:
-            return None
-        return VideoTaskSchema.model_validate(data)
+        status = VideoStatus.queued
+        if data.pop("is_invalid"):
+            status = VideoStatus.error
+        elif data.pop("is_finished"):
+            status = VideoStatus.finished
+        data['status'] = status
+
+        return VideoTaskSchema.model_validate(await self._update(schema.id, **data))
+
+    async def get(self, video_id: str) -> VideoTaskSchema:
+        model = await self._get_one(id=video_id)
+        return VideoTaskSchema.model_validate(model)
 
