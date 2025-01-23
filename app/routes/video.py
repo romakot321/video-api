@@ -13,7 +13,7 @@ from slowapi import Limiter
 limiter = Limiter(key_func=get_remote_address)
 
 router = APIRouter(prefix="/video", tags=["Video"])
-valid_access_token = os.getenv("ACCESS_TOKEN", "123")
+valid_access_tokens = os.getenv("ACCESS_TOKEN", "123").split(',')
 
 
 @router.post(
@@ -34,7 +34,7 @@ async def create_video_task(
         access_token: str = Header(),
         service: VideoService = Depends()
 ):
-    if access_token != valid_access_token:
+    if access_token not in valid_access_tokens:
         raise HTTPException(401)
     response = await service.create()
     background_tasks.add_task(service.send, schema, response.id)
@@ -58,7 +58,7 @@ async def get_video_task(
         access_token: str = Header(),
         service: VideoService = Depends()
 ):
-    if access_token != valid_access_token:
+    if access_token not in valid_access_tokens:
         raise HTTPException(401)
     return await service.get(video_id)
 
@@ -90,7 +90,7 @@ async def download_video_file(
         access_token: str = Header(),
         service: VideoService = Depends()
 ):
-    if access_token != valid_access_token:
+    if access_token not in valid_access_tokens:
         raise HTTPException(401)
     return await service.download(video_id)
 
