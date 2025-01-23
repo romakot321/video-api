@@ -28,4 +28,7 @@ COPY ./app ./app
 RUN pip3 install .
 
 ENV PATH="$PATH:/home/python/.local/bin"
-CMD gunicorn app.main:fastapi_app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:80
+CMD cd app/db && \
+    alembic -c ./alembic.prod.ini upgrade head && \
+    cd /home/python && \
+    gunicorn app.main:fastapi_app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:80

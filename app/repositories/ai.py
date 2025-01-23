@@ -18,6 +18,7 @@ class AIRepository:
     video_directory = os.getenv("VIDEO_DIRECTORY", 'video').rstrip('/')
 
     async def generate(self, schema: AITaskCreateRequestSchema):
+        return
         return await replicate.predictions.async_create(
             model="luma/ray",
             input={"prompt": schema.prompt},
@@ -26,6 +27,7 @@ class AIRepository:
         )
 
     async def load_video(self, api_url: str, video_id: str):
+        return
         async with aiohttp.ClientSession() as session:
             file_response = await session.get(
                 api_url,
@@ -35,10 +37,6 @@ class AIRepository:
             with open(self.make_video_file_path(video_id), 'wb') as f:
                 async for chunk in file_response.content.iter_chunked(1024):
                     f.write(chunk)
-
-    @classmethod
-    def make_video_url(cls, video_id: str) -> str:
-        return cls.webhook_url.split('webhook')[0] + 'file/' + video_id
 
     @classmethod
     def make_video_file_path(cls, video_id: str) -> str:

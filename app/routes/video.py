@@ -36,7 +36,7 @@ async def create_video_task(
 ):
     if access_token != valid_access_token:
         raise HTTPException(401)
-    response = await service.create()
+    response = await service.create(schema)
     background_tasks.add_task(service.send, schema, response.id)
     return response
 
