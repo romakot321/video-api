@@ -34,36 +34,20 @@ class VideoService:
         response = await self.ai_repository.generate(request)
         logger.debug("Received response: " + str(response))
 
-        schema = VideoTaskSchema(
-            id=str(video_id),
-            is_finished=0,
-            video_url=self.ai_repository.make_video_url(str(video_id))
-        )
-        await self.video_repository.update(schema)
-        return schema
+        return await self.video_repository.update(str(video_id), is_finished=0)
 
     async def get(self, video_id: UUID) -> VideoTaskSchema:
-        video = await self.video_repository.get(str(video_id))
-        if video is None:
-            raise HTTPException(404)
-        return video
+        return await self.video_repository.get(str(video_id))
 
     async def update(self, schema: AIVideoSchema, video_id: UUID):
         logger.debug("Receive webhook: " + str(schema.model_dump()))
         if schema.status != AITaskStatus.succeeded:
+            await self.video_repository.update(str(video_id), is_invalid=1)
             return
         await self.ai_repository.load_video(schema.output, str(video_id))
-
-        schema = VideoTaskSchema(
-            id=str(video_id),
-            is_finished=1,
-            video_url=self.ai_repository.make_video_url(str(video_id))
-        )
-        await self.video_repository.update(schema)
+        await self.video_repository.update(str(video_id), is_finished=1)
 
     async def download(self, video_id: UUID) -> FileResponse:
         video = await self.video_repository.get(str(video_id))
-        if video is None:
-            raise HTTPException(404)
         return FileResponse(self.ai_repository.make_video_file_path(str(video_id)))
 

@@ -16,17 +16,15 @@ class VideoRepository(BaseRepository):
         model = await self._create(model)
         return VideoTaskSchema.model_validate(model)
 
-    async def update(self, schema: VideoTaskSchema):
-        data = schema.model_dump(exclude_none=True)
+    async def update(self, video_id: str, **fields):
+        data = {k: v for k, v in fields.items() if v is not None}
 
-        status = VideoStatus.queued
-        if data.pop("is_invalid"):
-            status = VideoStatus.error
-        elif data.pop("is_finished"):
-            status = VideoStatus.finished
-        data['status'] = status
+        if "is_invalid" in data and data.pop("is_invalid"):
+            data['status'] = VideoStatus.error
+        elif "is_finished" in data and data.pop("is_finished"):
+            data['status'] = VideoStatus.finished
 
-        return VideoTaskSchema.model_validate(await self._update(schema.id, **data))
+        return VideoTaskSchema.model_validate(await self._update(video_id, **data))
 
     async def get(self, video_id: str) -> VideoTaskSchema:
         model = await self._get_one(id=video_id)
