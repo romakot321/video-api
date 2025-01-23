@@ -25,4 +25,5 @@ class VideoTaskSchema(BaseModel):
 class VideoTaskCreateSchema(BaseModel):
     prompt: str
     user_id: UUID
+    app_bundle: str
 

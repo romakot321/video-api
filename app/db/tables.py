@@ -45,4 +45,5 @@ class Video(BaseMixin, Base):
     finished_at: M[dt.datetime | None] = column(nullable=True)
     status: M[VideoStatus] = column(default=VideoStatus.queued)
     comment: M[str | None] = column(nullable=True)
+    app_bundle: M[str]
 

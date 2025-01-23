@@ -11,8 +11,8 @@ from app.repositories.base import BaseRepository
 class VideoRepository(BaseRepository):
     base_table = Video
 
-    async def create(self, user_id: str) -> VideoTaskSchema:
-        model = Video(user_id=user_id)
+    async def create(self, user_id: str, app_bundle: str) -> VideoTaskSchema:
+        model = Video(user_id=user_id, app_bundle=app_bundle)
         model = await self._create(model)
         return VideoTaskSchema.model_validate(model)
 
