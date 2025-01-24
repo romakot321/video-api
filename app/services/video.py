@@ -22,7 +22,7 @@ class VideoService:
         self.video_repository = video_repository
 
     async def create(self, schema: VideoTaskCreateSchema) -> VideoTaskSchema:
-        return await self.video_repository.create(user_id=schema.user_id)
+        return await self.video_repository.create(user_id=schema.user_id, app_bundle=schema.app_bundle)
 
     async def send(self, schema: VideoTaskCreateSchema, video_id: UUID) -> VideoTaskSchema:
         request = AITaskCreateRequestSchema(
