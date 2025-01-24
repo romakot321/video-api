@@ -81,16 +81,12 @@ async def ai_api_webhook(
     response_class=FileResponse,
     description="""
         Endpoint for download the file with generated video.
-        For do request you need to specify Access-Token header, ask me in telegram about it.
     """
 )
 async def download_video_file(
         video_id: UUID,
         request: Request,
-        access_token: str = Header(),
         service: VideoService = Depends()
 ):
-    if access_token not in valid_access_tokens:
-        raise HTTPException(401)
     return await service.download(video_id)
 
