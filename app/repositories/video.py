@@ -1,6 +1,8 @@
 from fastapi import Depends
 from loguru import logger
 from uuid import uuid4
+from sqlalchemy import select, delete
+import datetime as dt
 
 from app.db.base import get_session
 from app.db.tables import Video, VideoStatus
@@ -29,4 +31,19 @@ class VideoRepository(BaseRepository):
     async def get(self, video_id: str) -> VideoTaskSchema:
         model = await self._get_one(id=video_id)
         return VideoTaskSchema.model_validate(model)
+
+    async def list_expired(self) -> list[VideoTaskSchema]:
+        cut_off_date = dt.datetime.utcnow()
+        cut_off_date -= dt.timedelta(days=7)
+        query = select(self.base_table).where(self.base_table.created_at <= cut_off_date)
+        models = await self.session.scalars(query)
+        return [
+            VideoTaskSchema.model_validate(model)
+            for model in models
+        ]
+
+    async def delete_expired(self):
+        query = delete(self.base_table).where(self.base_table.created_at <= cut_off_date)
+        await self.session.execute(query)
+        await self.commit()
 

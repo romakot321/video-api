@@ -41,6 +41,15 @@ class AIRepository:
                     f.write(chunk)
 
     @classmethod
+    def clean_videos(cls, video_ids: list[str]):
+        for i in video_ids:
+            path = cls.make_video_file_path(i)
+            try:
+                os.remove(path)
+            except FileNotFoundError:
+                continue
+
+    @classmethod
     def make_video_file_path(cls, video_id: str) -> str:
         return f'{cls.video_directory}/{video_id}.mp4'
 

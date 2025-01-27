@@ -72,6 +72,7 @@ async def ai_api_webhook(
         schema: AIVideoSchema,
         service: VideoService = Depends()
 ) -> str:
+    await service.delete_expired()
     await service.update(schema, video_id)
     return 'OK'
 

@@ -54,3 +54,9 @@ class VideoService:
         video = await self.video_repository.get(str(video_id))
         return FileResponse(self.ai_repository.make_video_file_path(str(video_id)))
 
+    async def delete_expired(self):
+        videos = await self.video_repository.list_expired()
+        self.ai_repository.clean_videos([v.id for v in videos])
+        await self.video_repository.delete_expired()
+        print("Deleted", len(videos), "expired videos")
+

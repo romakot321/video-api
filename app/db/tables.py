@@ -22,6 +22,8 @@ from sqlalchemy.ext.associationproxy import AssociationProxy
 
 from app.db.base import Base
 
+sql_utcnow = text('(now() at time zone \'utc\')')
+
 
 class BaseMixin:
     @declared_attr.directive
@@ -29,8 +31,8 @@ class BaseMixin:
         letters = ['_' + i.lower() if i.isupper() else i for i in cls.__name__]
         return ''.join(letters).lstrip('_') + 's'
 
-    created_at: M[dt.datetime] = column(server_default=func.now())
-    updated_at: M[dt.datetime | None] = column(nullable=True, onupdate=func.now())
+    created_at: M[dt.datetime] = column(server_default=sql_utcnow)
+    updated_at: M[dt.datetime | None] = column(nullable=True, onupdate=sql_utcnow)
     id: M[UUID] = column(primary_key=True, index=True, default=uuid.uuid4)
 
 
