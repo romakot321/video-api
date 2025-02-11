@@ -24,9 +24,10 @@ class VideoService:
     async def create(self, schema: VideoTaskCreateSchema) -> VideoTaskSchema:
         return await self.video_repository.create(user_id=schema.user_id, app_bundle=schema.app_bundle)
 
-    async def send(self, schema: VideoTaskCreateSchema, video_id: UUID) -> VideoTaskSchema:
+    async def send(self, schema: VideoTaskCreateSchema, video_id: UUID) -> VideoTaskSchema | None:
         request = AITaskCreateRequestSchema(
             prompt=schema.prompt,
+            image_url=schema.image_url,
             video_id=str(video_id)
         )
 
@@ -56,7 +57,7 @@ class VideoService:
 
     async def delete_expired(self):
         videos = await self.video_repository.list_expired()
-        self.ai_repository.clean_videos([v.id for v in videos])
+        self.ai_repository.clean_videos([str(v.id) for v in videos])
         await self.video_repository.delete_expired()
-        print("Deleted", len(videos), "expired videos")
+        logger.info("Deleted " + str(len(videos)) + " expired videos")
 

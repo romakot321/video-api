@@ -24,6 +24,7 @@ class VideoTaskSchema(BaseModel):
 
 class VideoTaskCreateSchema(BaseModel):
     prompt: str
+    image_url: str | None = None
     user_id: UUID
     app_bundle: str
 

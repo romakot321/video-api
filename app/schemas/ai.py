@@ -5,6 +5,7 @@ from enum import Enum
 
 class AITaskCreateRequestSchema(BaseModel):
     prompt: str
+    image_url: str | None = None
     video_id: str
 
 

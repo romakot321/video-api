@@ -34,7 +34,7 @@ class VideoRepository(BaseRepository):
 
     async def list_expired(self) -> list[VideoTaskSchema]:
         cut_off_date = dt.datetime.utcnow()
-        cut_off_date -= dt.timedelta(days=7)
+        cut_off_date -= dt.timedelta(days=30)
         query = select(self.base_table).where(self.base_table.created_at <= cut_off_date)
         models = await self.session.scalars(query)
         return [
@@ -43,6 +43,8 @@ class VideoRepository(BaseRepository):
         ]
 
     async def delete_expired(self):
+        cut_off_date = dt.datetime.utcnow()
+        cut_off_date -= dt.timedelta(days=30)
         query = delete(self.base_table).where(self.base_table.created_at <= cut_off_date)
         await self.session.execute(query)
         await self.commit()

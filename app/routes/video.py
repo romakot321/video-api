@@ -22,11 +22,8 @@ valid_access_tokens = os.getenv("ACCESS_TOKEN", "123").split(',')
     description="""
         Endpoint for start a task for video generation.
         For do request you need to specify Access-Token header, ask me in telegram about it.
-
-        This endpoint rate-limited to 5 requests per minute.
     """
 )
-@limiter.limit("5/minute")
 async def create_video_task(
         schema: VideoTaskCreateSchema,
         request: Request,
@@ -47,11 +44,8 @@ async def create_video_task(
     description="""
         Endpoint for check the task of video generation status.
         For do request you need to specify Access-Token header, ask me in telegram about it.
-
-        This endpoint rate-limited to 10 requests per minute.
     """
 )
-@limiter.limit("10/minute")
 async def get_video_task(
         video_id: UUID,
         request: Request,
