@@ -22,6 +22,7 @@ valid_access_tokens = os.getenv("ACCESS_TOKEN", "123").split(',')
     description="""
         Endpoint for start a task for video generation.
         For do request you need to specify Access-Token header, ask me in telegram about it.
+        image_url can ba url from this documentation for image download
     """
 )
 async def create_video_task(

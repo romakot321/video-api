@@ -49,3 +49,7 @@ class Video(BaseMixin, Base):
     comment: M[str | None] = column(nullable=True)
     app_bundle: M[str]
 
+
+class Image(BaseMixin, Base):
+    pass
+
