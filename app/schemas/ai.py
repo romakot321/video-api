@@ -19,6 +19,7 @@ class AITaskStatus(str, Enum):
 
 class AIVideoSchema(BaseModel):
     id: str
-    output: str
+    output: str | None = None
     status: AITaskStatus
+    error: str
 

@@ -18,12 +18,14 @@ class AIRepository:
     video_directory = os.getenv("VIDEO_DIRECTORY", 'video').rstrip('/')
 
     async def generate(self, schema: AITaskCreateRequestSchema):
+        data = {"prompt": schema.prompt, "start_image_url": schema.image_url}
+        if schema.image_url is None:
+            data.pop("start_image_url")
         try:
             return await replicate.predictions.async_create(
                 model="luma/ray",
-                input={"prompt": schema.prompt, "start_image_url": schema.image_url},
-                webhook=self.webhook_url + "/" + schema.video_id,
-                webhook_events_filter=["completed"]
+                input=data,
+                webhook=self.webhook_url + "/" + schema.video_id
             )
         except replicate.exceptions.ReplicateError as e:
             logger.exception(e)

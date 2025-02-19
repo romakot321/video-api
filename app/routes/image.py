@@ -13,14 +13,13 @@ valid_access_tokens = os.getenv("ACCESS_TOKEN", "123").split(',')
 
 @router.post("", response_model=ImageSchema)
 async def upload_image(
-        schema: ImageCreateSchema,
         access_token: str = Header(),
         file: UploadFile = File(),
         service: ImageService = Depends()
 ):
     if access_token not in valid_access_tokens:
         raise HTTPException(401)
-    return await service.store_image(file, schema)
+    return await service.store_image(file)
 
 
 @router.get("/{image_id}", response_class=FileResponse)

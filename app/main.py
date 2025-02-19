@@ -53,8 +53,10 @@ def init_web_application():
         register_cors(application)
 
     from app.routes.video import router as video_router
+    from app.routes.image import router as image_router
 
     application.include_router(video_router)
+    application.include_router(image_router)
 
     attach_admin_panel(application)
 

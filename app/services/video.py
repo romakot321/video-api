@@ -45,8 +45,9 @@ class VideoService:
 
     async def update(self, schema: AIVideoSchema, video_id: UUID):
         logger.debug("Receive webhook: " + str(schema.model_dump()))
+        if schema.status == AITaskStatus.failed:
+            await self.video_repository.update(str(video_id), is_invalid=1, comment=schema.error)
         if schema.status != AITaskStatus.succeeded:
-            await self.video_repository.update(str(video_id), is_invalid=1)
             return
         await self.ai_repository.load_video(schema.output, str(video_id))
         await self.video_repository.update(str(video_id), is_finished=1)

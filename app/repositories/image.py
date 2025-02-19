@@ -5,7 +5,7 @@ from sqlalchemy import select, delete
 import datetime as dt
 
 from app.db.base import get_session
-from app.db.tables import Image, ImageStatus
+from app.db.tables import Image
 from app.schemas.image import ImageSchema, ImageCreateSchema
 from app.repositories.base import BaseRepository
 
@@ -13,8 +13,8 @@ from app.repositories.base import BaseRepository
 class ImageRepository(BaseRepository):
     base_table = Image
 
-    async def create(self, user_id: str, app_bundle: str) -> ImageSchema:
-        model = Image(user_id=user_id, app_bundle=app_bundle)
+    async def create(self) -> ImageSchema:
+        model = Image()
         model = await self._create(model)
         return ImageSchema.model_validate(model)
 

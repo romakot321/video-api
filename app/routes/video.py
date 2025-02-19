@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Request, Header, HTTPException, Response
 from fastapi import BackgroundTasks
 from fastapi.responses import FileResponse
 from uuid import UUID
+from loguru import logger
 import os
 
 from app.schemas.video import VideoTaskSchema, VideoTaskCreateSchema

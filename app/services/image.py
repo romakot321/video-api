@@ -20,11 +20,11 @@ class ImageService:
         with open(cls.image_directory / filename, 'wb') as f:
             f.write(body)
 
-    async def store_image(self, image: UploadFile, schema: ImageCreateSchema) -> ImageSchema:
-        model = await self.image_repository.create(schema.user_id, schema.app_bundle)
+    async def store_image(self, image: UploadFile) -> ImageSchema:
+        model = await self.image_repository.create()
         self._save_file(image.file.read(), str(model.id))
         return model
 
-    async def get_image(self, image_id: UUID) -> FileResponse:
+    async def download_image(self, image_id: UUID) -> FileResponse:
         return FileResponse(self.image_directory / str(image_id))
 

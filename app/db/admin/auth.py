@@ -13,6 +13,7 @@ class AdminAuth(AuthenticationBackend):
 
     @classmethod
     def _generate_token(cls) -> str:
+        return os.getenv("ADMIN_SECRET_KEY", "replaceme")
         global tokens
         token = (str(uuid4()) + str(uuid4())).replace('-', '')
         tokens.append(token)
@@ -34,7 +35,7 @@ class AdminAuth(AuthenticationBackend):
     async def authenticate(self, request: Request) -> bool:
         global tokens
         token = request.session.get("token")
-        if not token or token not in tokens:
+        if not token or token != os.getenv("ADMIN_SECRET_KEY", "replaceme"):
             return False
         return True
 

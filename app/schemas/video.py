@@ -8,6 +8,7 @@ class VideoTaskSchema(BaseModel):
     user_id: UUID
     is_finished: bool
     is_invalid: bool = False
+    comment: str | None = None
 
     @model_validator(mode='before')
     @classmethod
