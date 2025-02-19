@@ -21,7 +21,7 @@ class AIRepository:
         try:
             return await replicate.predictions.async_create(
                 model="luma/ray",
-                input={"prompt": schema.prompt, "start_image_url": schema.image_url},
+                input={"prompt": schema.prompt, "start_image_url": schema.image_url, "aspect_ratio": schema.aspect_ratio},
                 webhook=self.webhook_url + "/" + schema.video_id,
                 webhook_events_filter=["completed"]
             )

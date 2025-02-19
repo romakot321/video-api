@@ -27,4 +27,5 @@ class VideoTaskCreateSchema(BaseModel):
     image_url: str | None = None
     user_id: UUID
     app_bundle: str
+    aspect_ratio: str = "16:9"
 
