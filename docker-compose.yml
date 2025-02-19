@@ -6,6 +6,7 @@ services:
       context: ./
       args:
         VIDEO_DIRECTORY: ${VIDEO_DIRECTORY}
+        IMAGE_DIRECTORY: ${IMAGE_DIRECTORY}
     container_name: video_app
     depends_on:
       - postgres
@@ -17,6 +18,7 @@ services:
       default:
     volumes:
       - videoapi-storage:/home/python/${VIDEO_DIRECTORY}
+      - videoapi-image-storage:/home/python/${IMAGE_DIRECTORY}
 
   postgres:
     image: postgres:latest
@@ -32,3 +34,4 @@ networks:
     external: true
 volumes:
   videoapi-storage:
+  videoapi-image-storage:
