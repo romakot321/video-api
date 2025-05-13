@@ -7,7 +7,6 @@ class AITaskCreateRequestSchema(BaseModel):
     prompt: str
     image_url: str | None = None
     video_id: str
-    aspect_ratio: str = "16:9"
 
 
 class AITaskStatus(str, Enum):
@@ -22,5 +21,5 @@ class AIVideoSchema(BaseModel):
     id: str
     output: str | None = None
     status: AITaskStatus
-    error: str
+    error: str | None = None
 

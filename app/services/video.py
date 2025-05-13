@@ -28,8 +28,7 @@ class VideoService:
         request = AITaskCreateRequestSchema(
             prompt=schema.prompt,
             image_url=schema.image_url,
-            video_id=str(video_id),
-            aspect_ratio=schema.aspect_ratio
+            video_id=str(video_id)
         )
 
         logger.debug("Sending submit request to AI: " + str(request.model_dump()))

@@ -14,7 +14,8 @@ from app.schemas.video import VideoTaskSchema
 
 class AIRepository:
     token = os.getenv("REPLICATE_API_TOKEN")
-    webhook_url = os.getenv("REPLICATE_API_WEBHOOK_URL").rstrip('/')
+    # webhook_url = os.getenv("REPLICATE_API_WEBHOOK_URL").rstrip('/')
+    webhook_url = "https://backend.viewprotech.shop/video/webhook"
     video_directory = os.getenv("VIDEO_DIRECTORY", 'video').rstrip('/')
 
     async def generate(self, schema: AITaskCreateRequestSchema):

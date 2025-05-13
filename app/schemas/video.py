@@ -13,7 +13,9 @@ class VideoTaskSchema(BaseModel):
     @model_validator(mode='before')
     @classmethod
     def translate_status(cls, state):
-        if not isinstance(state, dict):
+        if isinstance(state, str):
+            state = cls(**json.loads(state))
+        elif not isinstance(state, dict):
             state = state.__dict__
         if state.get('status') and isinstance(state["status"], Enum):
             state["is_finished"] = state["status"].value == "finished"
@@ -28,5 +30,4 @@ class VideoTaskCreateSchema(BaseModel):
     image_url: str | None = None
     user_id: UUID
     app_bundle: str
-    aspect_ratio: str = "16:9"
 
